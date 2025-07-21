@@ -1,0 +1,55 @@
+plugins {
+  id 'java'
+  id 'war'
+  id 'org.springframework.boot' version '3.5.3' // 이거 따라 감 버전 명시 해두면
+  id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.imchobo'
+version = '0.0.1-SNAPSHOT'
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter'
+  implementation 'org.springframework.boot:spring-boot-starter-web:3.5.3' // 스타터 추가시 구동시 메인 메서드 안끝남(+톰캣 10 버전 사용)
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.5.3'
+
+  implementation 'org.projectlombok:lombok' // 전역
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  annotationProcessor 'org.projectlombok:lombok'
+  testAnnotationProcessor 'org.projectlombok:lombok' // 자바 테스트는 따로 정의 해줘야 함
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+  implementation 'org.springframework:spring-aspects:6.2.8' // 번호나 버전 생략하면 최신 버전 가져옴
+  runtimeOnly 'org.aspectj:aspectjweaver:1.9.24' // 추가 라이브러리들도 각각의 의존성이 있어서 확인하고 의존성 추가를 해줘야 함
+  runtimeOnly 'org.aspectj:aspectjrt:1.9.24'
+
+  implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.4.7' // 위에 스트링 부트 따라감
+  implementation 'org.mariadb.jdbc:mariadb-java-client' // 지금 일부러 버전 지움
+}
+
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+tasks.withType(JavaExec).configureEach {
+  jvmArgs "-Dfile.encoding=UTF-8"
+}
+
